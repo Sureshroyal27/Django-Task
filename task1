@@ -1,0 +1,22 @@
+import time
+from django.dispatch import Signal, receiver
+
+# Create a custom signal
+my_signal = Signal()
+
+# Define the receiver for the signal
+@receiver(my_signal)
+def my_receiver(sender, **kwargs):
+    print("Signal received. Starting processing...")
+    time.sleep(5)  # Simulate long running process
+    print("Processing finished.")
+
+# views.py (or anywhere you're sending the signal)
+from django.http import HttpResponse
+from .signals import my_signal
+
+def my_view(request):
+    print("Sending signal...")
+    my_signal.send(sender=None)
+    print("Signal sent. Returning response.")
+    return HttpResponse("Signal processed synchronously.")
